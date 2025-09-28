@@ -2,7 +2,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Home, LayoutDashboard, PanelLeft, PieChart } from 'lucide-react';
 import {
@@ -23,13 +22,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ActivityForm } from './dashboard/activity-form';
 import { Logo } from './icons';
 
 export function Header() {
   const pathname = usePathname();
-  const userAvatar = PlaceHolderImages.find(p => p.id === 'user-avatar-1');
 
   const getBreadcrumb = () => {
     if (pathname === '/unproductive') {
@@ -85,30 +82,6 @@ export function Header() {
       <div className="relative ml-auto flex-1 md:grow-0">
         <ActivityForm />
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
-            {userAvatar && (
-              <Image
-                src={userAvatar.imageUrl}
-                width={36}
-                height={36}
-                alt="Avatar"
-                className="overflow-hidden rounded-full"
-                data-ai-hint={userAvatar.imageHint}
-              />
-            )}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Logout</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
     </header>
   );
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { AppSidebar } from '@/components/app-sidebar';
 import { Header } from '@/components/header';
-import { Toaster } from '@/components/ui/toaster';
+import { Providers } from '@/components/providers';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -22,16 +22,17 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <div className="flex min-h-screen w-full flex-col bg-muted/40">
-          <AppSidebar />
-          <div className="flex flex-col sm:pl-14">
-            <Header />
-            <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-              {children}
-            </main>
+        <Providers>
+          <div className="flex min-h-screen w-full flex-col bg-muted/40">
+            <AppSidebar />
+            <div className="flex flex-col sm:pl-14">
+              <Header />
+              <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+                {children}
+              </main>
+            </div>
           </div>
-        </div>
-        <Toaster />
+        </Providers>
       </body>
     </html>
   );
