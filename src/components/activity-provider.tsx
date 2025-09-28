@@ -5,6 +5,7 @@ import { createContext, useContext, useState, useMemo, useCallback, ReactNode, u
 import { activities as initialActivitiesData } from '@/lib/data';
 import type { Activity } from '@/lib/types';
 import { formatDistance } from 'date-fns';
+import { getFromStorage, setInStorage } from '@/lib/storage';
 
 interface ActivityContextType {
   activities: Activity[];
@@ -18,33 +19,27 @@ interface ActivityContextType {
 }
 
 const ActivityContext = createContext<ActivityContextType | undefined>(undefined);
+const STORAGE_KEY = 'timeWiseActivities';
 
 // Helper to parse activities with Date objects
-const parseActivities = (jsonString: string): Activity[] => {
-  const parsed = JSON.parse(jsonString);
-  return parsed.map((activity: any) => ({
+const parseActivities = (data: any[]): Activity[] => {
+  return data.map((activity: any) => ({
     ...activity,
     startTime: new Date(activity.startTime),
     endTime: new Date(activity.endTime),
   }));
 };
 
-
 export function ActivityProvider({ children }: { children: ReactNode }) {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    try {
-      const item = window.localStorage.getItem('timeWiseActivities');
-      if (item) {
-        setActivities(parseActivities(item));
-      } else {
-        // For the first time user, populate with initial data
-        setActivities(initialActivitiesData);
-      }
-    } catch (error) {
-      console.error("Failed to read from localStorage", error);
+    const storedActivities = getFromStorage<any[]>(STORAGE_KEY, []);
+    if (storedActivities.length > 0) {
+      setActivities(parseActivities(storedActivities));
+    } else {
+      // For the first time user, populate with initial data
       setActivities(initialActivitiesData);
     }
     setIsLoaded(true);
@@ -52,11 +47,7 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (isLoaded) {
-      try {
-        window.localStorage.setItem('timeWiseActivities', JSON.stringify(activities));
-      } catch (error) {
-        console.error("Failed to write to localStorage", error);
-      }
+      setInStorage(STORAGE_KEY, activities);
     }
   }, [activities, isLoaded]);
 
