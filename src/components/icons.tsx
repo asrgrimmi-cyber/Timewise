@@ -5,14 +5,23 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 export function AnalogClock({ className }: { className?: string }) {
-  const [time, setTime] = useState(new Date());
+  const [time, setTime] = useState<Date | null>(null);
 
   useEffect(() => {
+    // Set the initial time on the client
+    setTime(new Date());
+    
     const timerId = setInterval(() => {
       setTime(new Date());
     }, 1000);
+    
     return () => clearInterval(timerId);
   }, []);
+
+  if (!time) {
+    // Don't render on the server or during the initial client render
+    return <div className={cn("relative w-full h-full rounded-full", className)}></div>;
+  }
 
   const hours = time.getHours();
   const minutes = time.getMinutes();
