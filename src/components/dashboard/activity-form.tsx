@@ -38,6 +38,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { categories } from "@/lib/data"
+import { useActivities } from "../activity-provider"
+import type { Activity } from "@/lib/types"
 
 const activityFormSchema = z.object({
   title: z.string().min(1, "Title is required."),
@@ -62,6 +64,7 @@ type ActivityFormValues = z.infer<typeof activityFormSchema>
 export function ActivityForm() {
   const [open, setOpen] = useState(false)
   const { toast } = useToast()
+  const { setActivities } = useActivities();
 
   const form = useForm<ActivityFormValues>({
     resolver: zodResolver(activityFormSchema),
@@ -73,7 +76,22 @@ export function ActivityForm() {
   });
 
   function onSubmit(data: ActivityFormValues) {
-    console.log(data)
+    const startTime = new Date(`${format(data.date, 'yyyy-MM-dd')}T${data.startTime}`);
+    const endTime = new Date(`${format(data.date, 'yyyy-MM-dd')}T${data.endTime}`);
+    const duration = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
+
+    const newActivity: Activity = {
+      id: `act-${Date.now()}`,
+      title: data.title,
+      categoryId: data.categoryId,
+      startTime,
+      endTime,
+      duration,
+      notes: data.notes,
+    };
+
+    setActivities(prev => [...prev, newActivity]);
+
     toast({
       title: "Activity Logged!",
       description: `"${data.title}" has been added to your timeline.`,
@@ -85,11 +103,9 @@ export function ActivityForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="h-8 gap-1">
-          <PlusCircle className="h-3.5 w-3.5" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Log Activity
-          </span>
+        <Button variant="outline" size="sm" className="ml-auto gap-1.5 text-sm">
+          <PlusCircle className="size-3.5" />
+          Log Activity
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">

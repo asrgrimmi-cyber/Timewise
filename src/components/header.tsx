@@ -79,7 +79,7 @@ export function Header() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="relative ml-auto flex-1 md:grow-0">
+      <div className="ml-auto">
         <ActivityForm />
       </div>
     </header>
