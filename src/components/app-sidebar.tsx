@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { LayoutDashboard, Settings, PieChart } from 'lucide-react';
-import { Logo } from '@/components/icons';
+import { AnalogClock } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -21,9 +21,9 @@ export function AppSidebar() {
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link
           href="#"
-          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+          className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base p-1.5"
         >
-          <Logo className="h-4 w-4 transition-all group-hover:scale-110" />
+          <AnalogClock className="h-full w-full transition-all group-hover:scale-110" />
           <span className="sr-only">TimeWise</span>
         </Link>
         {navItems.map((item) => (

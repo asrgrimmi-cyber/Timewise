@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, LayoutDashboard, PanelLeft, PieChart } from 'lucide-react';
+import { Home, LayoutDashboard, PanelLeft, PieChart, PlusCircle } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +23,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { ActivityForm } from './dashboard/activity-form';
-import { Logo } from './icons';
+import { AnalogClock } from './icons';
 
 export function Header() {
   const pathname = usePathname();
@@ -48,9 +48,9 @@ export function Header() {
           <nav className="grid gap-6 text-lg font-medium">
             <Link
               href="#"
-              className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+              className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base p-2"
             >
-              <Logo className="h-5 w-5 transition-all group-hover:scale-110" />
+              <AnalogClock className="h-full w-full transition-all group-hover:scale-110" />
               <span className="sr-only">TimeWise</span>
             </Link>
             <Link href="/" className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
@@ -80,7 +80,7 @@ export function Header() {
         </BreadcrumbList>
       </Breadcrumb>
       <div className="ml-auto">
-        <ActivityForm />
+         <ActivityForm />
       </div>
     </header>
   );
