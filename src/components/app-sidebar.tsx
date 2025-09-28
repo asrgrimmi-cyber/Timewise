@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { LayoutDashboard, Settings, PieChart } from 'lucide-react';
-import { DigitalClock } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 const navItems = [

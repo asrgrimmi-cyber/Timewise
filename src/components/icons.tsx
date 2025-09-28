@@ -15,11 +15,12 @@ export function DigitalClock({ className }: { className?: string }) {
   }, []);
 
   if (!time) {
-    return <div className={cn("flex items-center justify-center font-mono text-sm text-primary-foreground", className)}>--:--:--</div>;
+    // Render a placeholder on the server and during the initial client render
+    return <div className={cn("text-sm text-muted-foreground", className)}>--:--:--</div>;
   }
 
   return (
-    <div className={cn("flex items-center justify-center font-mono text-sm text-primary-foreground", className)}>
+    <div className={cn("font-mono text-sm text-foreground", className)}>
       {format(time, 'HH:mm:ss')}
     </div>
   );
