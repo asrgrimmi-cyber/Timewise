@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -6,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { categories, activities as initialActivities } from '@/lib/data';
+import { categories } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { Calendar as CalendarIcon, RotateCw } from 'lucide-react';
 import type { Activity } from '@/lib/types';
@@ -45,17 +46,16 @@ function ActivityCard({ activity }: { activity: Activity }) {
   );
 }
 
-export function TimelineView() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [activities, setActivities] = useState<Activity[]>(initialActivities.sort((a, b) => a.startTime.getTime() - b.startTime.getTime()));
-  
-  // For demo, we'll just use the mock data regardless of date.
-  // In a real app, you would filter activities based on the selected `date`.
-  const totalDuration = activities.reduce((sum, act) => sum + act.duration, 0);
+interface TimelineViewProps {
+  activities: Activity[];
+  totalDuration: number;
+  onReset: () => void;
+}
 
-  const handleReset = () => {
-    setActivities([]);
-  };
+export function TimelineView({ activities, totalDuration, onReset }: TimelineViewProps) {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  
+  const sortedActivities = activities.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 
   return (
     <Card>
@@ -67,7 +67,7 @@ export function TimelineView() {
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={handleReset}>
+          <Button variant="outline" size="icon" onClick={onReset}>
             <RotateCw className="h-4 w-4" />
             <span className="sr-only">Reset Activities</span>
           </Button>
@@ -90,8 +90,8 @@ export function TimelineView() {
       <CardContent>
         <ScrollArea className="h-[500px] pr-4">
           <div className="space-y-6">
-            {activities.length > 0 ? (
-              activities.map((activity) => (
+            {sortedActivities.length > 0 ? (
+              sortedActivities.map((activity) => (
                 <ActivityCard key={activity.id} activity={activity} />
               ))
             ) : (
