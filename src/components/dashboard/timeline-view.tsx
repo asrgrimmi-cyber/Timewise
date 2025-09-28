@@ -6,9 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { categories, activities as allActivities } from '@/lib/data';
+import { categories, activities as initialActivities } from '@/lib/data';
 import { cn } from '@/lib/utils';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, RotateCw } from 'lucide-react';
 import type { Activity } from '@/lib/types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
@@ -48,11 +48,15 @@ function ActivityCard({ activity }: { activity: Activity }) {
 
 export function TimelineView() {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [activities, setActivities] = useState<Activity[]>(initialActivities.sort((a, b) => a.startTime.getTime() - b.startTime.getTime()));
   
   // For demo, we'll just use the mock data regardless of date.
   // In a real app, you would filter activities based on the selected `date`.
-  const activities = allActivities.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
   const totalDuration = activities.reduce((sum, act) => sum + act.duration, 0);
+
+  const handleReset = () => {
+    setActivities([]);
+  };
 
   return (
     <Card>
@@ -60,30 +64,43 @@ export function TimelineView() {
         <div>
           <CardTitle>Activity Timeline</CardTitle>
           <CardDescription>
-            {activities.length} activities logged today for a total of {formatDistance(0, totalDuration * 60 * 1000, { includeSeconds: false })}.
+            {activities.length} activities logged today for a total of {totalDuration > 0 ? formatDistance(0, totalDuration * 60 * 1000, { includeSeconds: false }) : '0 minutes'}.
           </CardDescription>
         </div>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={'outline'}
-              className={cn('w-[240px] justify-start text-left font-normal', !date && 'text-muted-foreground')}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, 'PPP') : <span>Pick a date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="end">
-            <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
-          </PopoverContent>
-        </Popover>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="icon" onClick={handleReset}>
+            <RotateCw className="h-4 w-4" />
+            <span className="sr-only">Reset Activities</span>
+          </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={'outline'}
+                className={cn('w-[240px] justify-start text-left font-normal', !date && 'text-muted-foreground')}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {date ? format(date, 'PPP') : <span>Pick a date</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+            </PopoverContent>
+          </Popover>
+        </div>
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[500px] pr-4">
           <div className="space-y-6">
-            {activities.map((activity) => (
-              <ActivityCard key={activity.id} activity={activity} />
-            ))}
+            {activities.length > 0 ? (
+              activities.map((activity) => (
+                <ActivityCard key={activity.id} activity={activity} />
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground py-12">
+                <p className="text-lg font-medium">No activities logged.</p>
+                <p className="text-sm">Use the "Log Activity" button to add your first entry.</p>
+              </div>
+            )}
           </div>
         </ScrollArea>
       </CardContent>
