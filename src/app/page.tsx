@@ -1,53 +1,23 @@
 
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
 import { TimelineView } from "@/components/dashboard/timeline-view";
 import { ComparisonReport } from "@/components/dashboard/comparison-report";
 import { QuickAdd } from "@/components/dashboard/quick-add";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { activities as initialActivities, categories, calendarEvents } from '@/lib/data';
-import type { Activity } from '@/lib/types';
-import { formatDistance } from 'date-fns';
+import { useActivities } from '@/components/activity-provider';
+
 
 export default function DashboardPage() {
-  const [activities, setActivities] = useState<Activity[]>(initialActivities);
-
-  const handleReset = () => {
-    setActivities([]);
-  };
-
-  const { timeLogged, mostProductiveCategory, activitiesLogged, productivityScore, totalDuration } = useMemo(() => {
-    const totalDuration = activities.reduce((sum, act) => sum + act.duration, 0);
-    const timeLogged = totalDuration > 0 ? formatDistance(0, totalDuration * 60 * 1000, { includeSeconds: false }).replace('about ', '') : '0m';
-
-    const categoryDurations: { [key: string]: number } = {};
-    activities.forEach(activity => {
-      if (categoryDurations[activity.categoryId]) {
-        categoryDurations[activity.categoryId] += activity.duration;
-      } else {
-        categoryDurations[activity.categoryId] = activity.duration;
-      }
-    });
-
-    let mostProductiveCategory = 'N/A';
-    let maxDuration = 0;
-    for (const categoryId in categoryDurations) {
-      if (categoryDurations[categoryId] > maxDuration) {
-        maxDuration = categoryDurations[categoryId];
-        const category = categories.find(c => c.id === categoryId);
-        mostProductiveCategory = category ? category.name : 'N/A';
-      }
-    }
-
-    const activitiesLogged = activities.length;
-
-    const plannedTime = calendarEvents.reduce((total, event) => total + (event.endTime.getTime() - event.startTime.getTime()) / (1000 * 60), 0);
-    const actualTime = activities.reduce((total, activity) => total + activity.duration, 0);
-    const productivityScore = plannedTime > 0 ? Math.round((actualTime / plannedTime) * 100) : 0;
-
-    return { timeLogged, mostProductiveCategory, activitiesLogged, productivityScore, totalDuration };
-  }, [activities]);
+  const { 
+    activities,
+    handleReset,
+    timeLogged,
+    mostProductiveCategory,
+    activitiesLogged,
+    productivityScore,
+    totalDuration
+   } = useActivities();
 
   return (
     <div className="grid gap-4 md:gap-8 lg:grid-cols-3">
