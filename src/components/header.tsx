@@ -23,7 +23,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { ActivityForm } from './dashboard/activity-form';
-import { AnalogClock } from './icons';
+import { DigitalClock } from './icons';
 
 export function Header() {
   const pathname = usePathname();
@@ -50,7 +50,7 @@ export function Header() {
               href="#"
               className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base p-2"
             >
-              <AnalogClock className="h-full w-full transition-all group-hover:scale-110" />
+              <DigitalClock className="h-full w-full transition-all group-hover:scale-110" />
               <span className="sr-only">TimeWise</span>
             </Link>
             <Link href="/" className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
