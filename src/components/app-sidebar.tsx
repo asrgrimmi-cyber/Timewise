@@ -1,14 +1,16 @@
+
 'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
-import { LayoutDashboard, Settings } from 'lucide-react';
+import { LayoutDashboard, Settings, PieChart } from 'lucide-react';
 import { Logo } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/unproductive', icon: PieChart, label: 'Productivity Analysis' },
 ];
 
 export function AppSidebar() {
