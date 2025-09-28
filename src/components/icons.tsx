@@ -32,13 +32,17 @@ export function AnalogClock({ className }: { className?: string }) {
   const secondDeg = seconds * 6;
 
   return (
-    <div className={cn("relative w-full h-full rounded-full", className)}>
-      <div className="absolute top-1/2 left-1/2 w-0.5 h-[calc(50%-8px)] bg-primary-foreground origin-bottom transform -translate-x-1/2" 
-           style={{ transform: `translateX(-50%) rotate(${hourDeg}deg)`, height: 'calc(50% - 6px)' }}></div>
-      <div className="absolute top-1/2 left-1/2 w-0.5 h-[calc(50%-4px)] bg-primary-foreground origin-bottom transform -translate-x-1/2" 
-           style={{ transform: `translateX(-50%) rotate(${minuteDeg}deg)`, height: 'calc(50% - 4px)' }}></div>
-      <div className="absolute top-1/2 left-1/2 w-px h-1/2 bg-destructive origin-bottom transform -translate-x-1/2" 
+    <div className={cn("relative w-full h-full rounded-full border-2 border-primary-foreground", className)}>
+      {/* Hour hand */}
+      <div className="absolute top-1/2 left-1/2 w-0.5 h-[25%] bg-primary-foreground origin-bottom transform -translate-x-1/2 -translate-y-full" 
+           style={{ transform: `translateX(-50%) rotate(${hourDeg}deg)` }}></div>
+      {/* Minute hand */}
+      <div className="absolute top-1/2 left-1/2 w-0.5 h-[35%] bg-primary-foreground origin-bottom transform -translate-x-1/2 -translate-y-full" 
+           style={{ transform: `translateX(-50%) rotate(${minuteDeg}deg)` }}></div>
+      {/* Second hand */}
+      <div className="absolute top-1/2 left-1/2 w-px h-[40%] bg-accent-foreground origin-bottom transform -translate-x-1/2 -translate-y-full" 
            style={{ transform: `translateX(-50%) rotate(${secondDeg}deg)` }}></div>
+      {/* Center dot */}
       <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-primary-foreground rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
     </div>
   );
