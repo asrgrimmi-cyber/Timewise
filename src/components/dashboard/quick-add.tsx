@@ -5,11 +5,29 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { categories, quickAddTemplates } from '@/lib/data';
 import { Plus } from 'lucide-react';
+import { useActivities } from '../activity-provider';
+import type { Activity } from '@/lib/types';
 
 export function QuickAdd() {
   const { toast } = useToast();
+  const { setActivities } = useActivities();
 
   const handleQuickAdd = (template: typeof quickAddTemplates[0]) => {
+    const now = new Date();
+    const startTime = new Date(now.getTime() - template.duration * 60000);
+
+    const newActivity: Activity = {
+      id: `act-${Date.now()}`,
+      title: template.title,
+      categoryId: template.categoryId,
+      startTime: startTime,
+      endTime: now,
+      duration: template.duration,
+      notes: 'Quick-added activity',
+    };
+
+    setActivities(prev => [...prev, newActivity]);
+
     toast({
       title: 'Activity Quick-Added!',
       description: `"${template.title}" was logged for ${template.duration} minutes.`,
