@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { BrainCircuit, Home, LayoutDashboard, PanelLeft } from 'lucide-react';
+import { Home, LayoutDashboard, PanelLeft } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -58,10 +58,6 @@ export function Header() {
             <Link href="/" className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
               <LayoutDashboard className="h-5 w-5" />
               Dashboard
-            </Link>
-            <Link href="/unproductive" className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
-              <BrainCircuit className="h-5 w-5" />
-              Productivity
             </Link>
           </nav>
         </SheetContent>
