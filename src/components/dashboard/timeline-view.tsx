@@ -12,7 +12,6 @@ import { Calendar as CalendarIcon, RotateCw } from 'lucide-react';
 import type { Activity } from '@/lib/types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '../ui/separator';
 
 function ActivityCard({ activity }: { activity: Activity }) {
   const category = categories.find((c) => c.id === activity.categoryId);
