@@ -5,8 +5,12 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
+import { format } from "date-fns"
+import { Calendar as CalendarIcon, PlusCircle } from "lucide-react"
 
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Dialog,
   DialogContent,
@@ -25,22 +29,28 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { categories } from "@/lib/data"
-import { PlusCircle } from "lucide-react"
 
 const activityFormSchema = z.object({
   title: z.string().min(1, "Title is required."),
   categoryId: z.string().min(1, "Please select a category."),
+  date: z.date({
+    required_error: "A date is required.",
+  }),
   startTime: z.string().min(1, "Start time is required."),
   endTime: z.string().min(1, "End time is required."),
   notes: z.string().optional(),
 }).refine(data => {
-  const today = new Date().toISOString().split('T')[0];
-  const start = new Date(`${today}T${data.startTime}`);
-  const end = new Date(`${today}T${data.endTime}`);
+  const start = new Date(`${format(data.date, 'yyyy-MM-dd')}T${data.startTime}`);
+  const end = new Date(`${format(data.date, 'yyyy-MM-dd')}T${data.endTime}`);
   return end > start;
 }, {
   message: "End time must be after start time.",
@@ -58,6 +68,7 @@ export function ActivityForm() {
     defaultValues: {
       title: "",
       notes: "",
+      date: new Date(),
     },
   });
 
@@ -121,6 +132,47 @@ export function ActivityForm() {
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
