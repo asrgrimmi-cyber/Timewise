@@ -72,6 +72,8 @@ export function ActivityForm() {
       title: "",
       notes: "",
       date: new Date(),
+      startTime: "",
+      endTime: "",
     },
   });
 
@@ -103,8 +105,8 @@ export function ActivityForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="ml-auto gap-1.5 text-sm">
-          <PlusCircle className="size-3.5" />
+        <Button variant="outline" size="sm">
+          <PlusCircle className="mr-2 h-4 w-4" />
           Log Activity
         </Button>
       </DialogTrigger>
